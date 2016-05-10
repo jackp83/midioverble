@@ -12,8 +12,6 @@
 #include <sys/socket.h>
 #include <string>
 
-#include "../ble/BLESender.h"
-
 /*
  * This class includes the public functions to open/close a
  * MIDI port and listen to it for incoming messages.
@@ -23,15 +21,13 @@ const int MIDI_BUFFER_SIZE = 3;//Size of the buffer in witch raw MIDI will be wr
 
 class MIDIListener {
 private:
-	BLESender blesender;
 	snd_rawmidi_t* midiin;
-	bool listen;
 public:
-	MIDIListener(BLESender _blesender);
+	MIDIListener();
 	virtual ~MIDIListener();
 	int open_port(int mode,std::string portname);
 	int close_port();
-	void listen_for_MIDI_messages();
+	int listen_for_MIDI_messages(char *buffer);
 };
 
 #endif /* MIDILISTENER_H_ */

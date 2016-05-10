@@ -11,6 +11,11 @@
 
 #include <string.h>
 #include <sys/socket.h>
+#include <sys/socket.h>
+#include <bluetooth/bluetooth.h>
+#include <bluetooth/l2cap.h>
+#include <bluetooth/hci.h>
+#include <bluetooth/hci_lib.h>
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -20,8 +25,6 @@
 #include <limits.h>
 #include <errno.h>
 
-#include "../midi/MIDISpeaker.h"
-#include "../midi/MIDITools.h"
 
 
 class BLEReceiver {
@@ -29,8 +32,9 @@ public:
 	BLEReceiver();
 	virtual ~BLEReceiver();
 	int l2cap_le_listen_and_accept();
-	int read_data(MIDISpeaker obj,MIDITools midit);
+	int read_data(char *buf,int buf_size);
 	void advertise_ble();
+	void set_socket_number(int socket_nr);
 private:
 	int accept_socket;
 };

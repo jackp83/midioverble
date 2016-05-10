@@ -6,11 +6,9 @@
  */
 
 #include "BLEReceiver.h"
-#include "../midi/MIDITools.h"
-
 
 BLEReceiver::BLEReceiver() {
-
+	accept_socket = NULL;
 }
 
 BLEReceiver::~BLEReceiver() {
@@ -85,37 +83,19 @@ int BLEReceiver::l2cap_le_listen_and_accept() {
  * Reads data from a remote socket connection and writes it to midi out
  * Takes a Midi and MIDITools object as arguments
  */
-int BLEReceiver::read_data(MIDISpeaker obj,MIDITools midit) {
-
+int BLEReceiver::read_data(char *buf,int buf_size) {
 	int bytes_read;
-	char buf[3];
-	memset(&buf, 0, sizeof(buf));
 	int size;
-
-	bytes_read = read(accept_socket, buf, sizeof(buf));
+	printf("Read data\n");
+	bytes_read = read(accept_socket, buf, buf_size);
 
 	if( bytes_read < 0 ) {
 		perror("Could not read data");
 		return -1;
 	}else{
-		size = midit.get_message_dataload_size_depending_on_first_byte(buf[0]);
-
-		if(size>=0) {
-			obj.write_to_out(buf[0], 1);
-			printf("%x  ", buf[0]);
-		}
-		if(size>=1) {
-			obj.write_to_out(buf[1],1);
-			printf("%x  ", buf[1]);
-		}
-		if(size>=2) {
-			obj.write_to_out(buf[2],1);
-			printf("%x  ", buf[2]);
-		}
-		printf("\n");
+		printf("MESSAGE RECEIVED OVER BLE\n");
+		return 0;
 	}
-
-	return 0;
 }
 
 void BLEReceiver::advertise_ble() {
@@ -130,6 +110,10 @@ void BLEReceiver::advertise_ble() {
 	}
 
 	hci_le_set_advertise_enable(hci_socket, 0, 1000);
+}
+
+void BLEReceiver::set_socket_number(int socket_nr){
+	accept_socket= socket_nr;
 }
 
 /*

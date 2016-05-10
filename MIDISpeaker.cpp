@@ -9,7 +9,7 @@
 
 
 MIDISpeaker::MIDISpeaker() {
-
+	midiout = NULL;
 }
 
 MIDISpeaker::~MIDISpeaker() {
@@ -19,11 +19,13 @@ MIDISpeaker::~MIDISpeaker() {
 /*
  * opens a midi out port
  */
-void MIDISpeaker::open_midi_out(std::string type, int mode) {
+int MIDISpeaker::open_midi_out(std::string type, int mode) {
 	midiout = 0;
 	if(snd_rawmidi_open(NULL,&midiout,type.c_str(),mode) < 0) {
 		perror("Could not open port");
+		return -1;
 	}
+	return 0;
 }
 
 

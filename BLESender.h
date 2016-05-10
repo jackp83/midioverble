@@ -31,6 +31,7 @@ public:
 	virtual ~BLESender();
 	int connect_to_remote_ble_device(std::string destination_bluetooth_address);
 	int send_over_ble(char* array,int array_size);
+	void set_socket_number(int socket_nr);
 };
 
 #endif /* BLESENDER_H_ */

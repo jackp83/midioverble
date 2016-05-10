@@ -34,7 +34,7 @@ class MIDISpeaker {
 public:
 	MIDISpeaker();
 	virtual ~MIDISpeaker();
-	void open_midi_out(std::string type, int mode);
+	int open_midi_out(std::string type, int mode);
 	void write_to_out(char buf, int bufSize);
 private:
 	snd_rawmidi_t *midiout;

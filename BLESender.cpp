@@ -28,7 +28,7 @@ int BLESender::connect_to_remote_ble_device(std::string destination_bluetooth_ad
 	socket_number = l2cap_le_socket(destination_bluetooth_address, BDADDR_LE_PUBLIC,BDADDR_LE_PUBLIC, BT_SECURITY_LOW);
 	if(socket_number>0){
 		if(connect_to_socket()==0)
-			return 0;
+			return socket_number;
 	}
 	return -1;
 
@@ -48,11 +48,18 @@ int BLESender::connect_to_remote_ble_device(std::string destination_bluetooth_ad
  * Returns 0 if successful and -1 if not successful.
  */
 int BLESender::send_over_ble(char* array,int array_size) {
-	if(write(socket_number, array, array_size)>0)
+	printf("trying to send over ble\n");
+	if(write(socket_number, array, array_size)>0) {
+		printf("sent over ble\n");
 		return 0;
+	}
 	return -1;
 }
 
+
+void BLESender::set_socket_number(int socket_nr){
+	socket_number = socket_nr;
+}
 
 //============================================================================
 // Private functions

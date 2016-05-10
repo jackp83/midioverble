@@ -9,10 +9,8 @@
 
 #include "MIDIListener.h"
 
-MIDIListener::MIDIListener(BLESender _blesender) {
-	blesender = _blesender;
+MIDIListener::MIDIListener() {
 	midiin = NULL;
-	listen = false;
 }
 
 /*
@@ -35,7 +33,6 @@ int MIDIListener::open_port(int mode,std::string portname){
  * Stops the listen_for_MIDI_messages function and closes the port.
  */
 int MIDIListener::close_port(){
-	listen = false;
 	int ret = snd_rawmidi_close(midiin);
 	midiin  = NULL;
 	return ret;
@@ -46,18 +43,14 @@ int MIDIListener::close_port(){
  * Directly sends the received MIDI message into the function
  * send_over_ble in BluetoothLowEnergy.
  */
-void MIDIListener::listen_for_MIDI_messages(){
-	//malloc ??
-	char buffer[MIDI_BUFFER_SIZE];	//See header-file for MIDI_BUFFER_SIZE
-	listen = true;
-	while (listen==true) {
-		if(snd_rawmidi_read(midiin, buffer, MIDI_BUFFER_SIZE)>=0){
-			if(blesender.send_over_ble(buffer,sizeof(buffer))<0){
-				std::cout << "\nCould not send over BLE\n";
-			}
-		}
+int MIDIListener::listen_for_MIDI_messages(char *buffer){
+	if(snd_rawmidi_read(midiin, buffer, MIDI_BUFFER_SIZE)>=0){
 		snd_rawmidi_drain(midiin);
 		fflush(stdout);
+		return 0;
+	}else{
+		snd_rawmidi_drain(midiin);
+		fflush(stdout);
+		return 1;
 	}
-	//unmalloc?
 }
