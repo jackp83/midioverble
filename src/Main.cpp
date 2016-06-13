@@ -16,7 +16,7 @@
 #include "MIDIOverBLE.h"
 #include "Test.h"
 
-void run_central() {
+void run_peripheral() {
 	MIDIOverBLE mob;
 	mob.open_ports("virtual",0,"virtual",0);
 
@@ -31,7 +31,7 @@ void run_central() {
 	}
 }
 
-void run_peripheral(std::string bluetooth_address) {
+void run_central(std::string bluetooth_address) {
 	MIDIOverBLE mob;
 	mob.open_ports("virtual",0,"virtual",0);
 
@@ -45,12 +45,12 @@ void run_peripheral(std::string bluetooth_address) {
 	}
 }
 
-int run_tests_as_central(){
+int run_tests_as_peripheral(){
 	Test test;
 	return test.run_tests();
 }
 
-int run_tests_as_peripheral(std::string bluetooth_address){
+int run_tests_as_central(std::string bluetooth_address){
 	Test test;
 	return test.run_tests(bluetooth_address,1000,0,6,6,6,6,0,0,0x000A,0x000A);
 }
@@ -59,14 +59,14 @@ int run_tests_as_peripheral(std::string bluetooth_address){
 
 int main(int argc, char **argv) {
 	if (argc > 1){
-		run_peripheral(argv[1]);//RUN AS ROOT!!!!
+		run_central(argv[1]);//RUN AS ROOT!!!!
 	}else{
-		run_central();
+		run_peripheral();
 	}
 
-	//run_tests_as_peripheral("24:FD:52:1A:AF:0D");
+	//run_tests_as_central("24:FD:52:1A:AF:0D");
 	//or
-	//run_tests_as_central();
+	//run_tests_as_peripheral();
 
 	return 0;
 }
